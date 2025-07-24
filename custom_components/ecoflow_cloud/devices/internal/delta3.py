@@ -126,69 +126,69 @@ class Delta3(BaseDevice):
 
         ]
 
-    # def switches(self, client: EcoflowApiClient) -> list[BaseSwitchEntity]:
-    #     return [
-    #         BeeperEntity(client, self, "mppt.beepState", const.BEEPER,
-    #                      lambda value: {"moduleType": 5, "operateType": "quietMode", "params": {"enabled": value}}),
+    def switches(self, client: EcoflowApiClient) -> list[BaseSwitchEntity]:
+        return [
+            # BeeperEntity(client, self, "mppt.beepState", const.BEEPER,
+            #              lambda value: {"moduleType": 5, "operateType": "quietMode", "params": {"enabled": value}}),
 
-    #         EnabledEntity(client, self, "pd.dcOutState", const.USB_ENABLED,
-    #                       lambda value: {"moduleType": 1, "operateType": "dcOutCfg", "params": {"enabled": value}}),
+            # EnabledEntity(client, self, "pd.dcOutState", const.USB_ENABLED,
+            #               lambda value: {"moduleType": 1, "operateType": "dcOutCfg", "params": {"enabled": value}}),
 
-    #         EnabledEntity(client, self, "pd.acAutoOutConfig", const.AC_ALWAYS_ENABLED,
-    #                       lambda value, params: {"moduleType": 1, "operateType": "acAutoOutConfig",
-    #                                              "params": {"acAutoOutConfig": value,
-    #                                                         "minAcOutSoc": int(
-    #                                                             params.get("bms_emsStatus.minDsgSoc", 0)) + 5}}),
+            # EnabledEntity(client, self, "pd.acAutoOutConfig", const.AC_ALWAYS_ENABLED,
+            #               lambda value, params: {"moduleType": 1, "operateType": "acAutoOutConfig",
+            #                                      "params": {"acAutoOutConfig": value,
+            #                                                 "minAcOutSoc": int(
+            #                                                     params.get("bms_emsStatus.minDsgSoc", 0)) + 5}}),
 
-    #         EnabledEntity(client, self, "pd.pvChgPrioSet", const.PV_PRIO,
-    #                       lambda value: {"moduleType": 1, "operateType": "pvChangePrio",
-    #                                      "params": {"pvChangeSet": value}}),
+            # EnabledEntity(client, self, "pd.pvChgPrioSet", const.PV_PRIO,
+            #               lambda value: {"moduleType": 1, "operateType": "pvChangePrio",
+            #                              "params": {"pvChangeSet": value}}),
 
-    #         EnabledEntity(client, self, "mppt.cfgAcEnabled", const.AC_ENABLED,
-    #                       lambda value: {"moduleType": 5, "operateType": "acOutCfg",
-    #                                      "params": {"enabled": value, "out_voltage": -1, "out_freq": 255,
-    #                                                 "xboost": 255}}),
+            # EnabledEntity(client, self, "mppt.cfgAcEnabled", const.AC_ENABLED,
+            #               lambda value: {"moduleType": 5, "operateType": "acOutCfg",
+            #                              "params": {"enabled": value, "out_voltage": -1, "out_freq": 255,
+            #                                         "xboost": 255}}),
 
-    #         EnabledEntity(client, self, "mppt.cfgAcXboost", const.XBOOST_ENABLED,
-    #                       lambda value: {"moduleType": 5, "operateType": "acOutCfg",
-    #                                      "params": {"enabled": 255, "out_voltage": -1, "out_freq": 255,
-    #                                                 "xboost": value}}),
+            # EnabledEntity(client, self, "mppt.cfgAcXboost", const.XBOOST_ENABLED,
+            #               lambda value: {"moduleType": 5, "operateType": "acOutCfg",
+            #                              "params": {"enabled": 255, "out_voltage": -1, "out_freq": 255,
+            #                                         "xboost": value}}),
 
-    #         EnabledEntity(client, self, "pd.carState", const.DC_ENABLED,
-    #                       lambda value: {"moduleType": 5, "operateType": "mpptCar", "params": {"enabled": value}}),
+            # EnabledEntity(client, self, "pd.carState", const.DC_ENABLED,
+            #               lambda value: {"moduleType": 5, "operateType": "mpptCar", "params": {"enabled": value}}),
 
-    #         EnabledEntity(client, self, "pd.watchIsConfig", const.BP_ENABLED,
-    #                       lambda value: {"moduleType": 1,
-    #                                      "operateType": "watthConfig",
-    #                                      "params": {"bpPowerSoc": value * 50,
-    #                                                 "minChgSoc": 0,
-    #                                                 "isConfig": value,
-    #                                                 "minDsgSoc": 0}}),
-    #     ]
+            # EnabledEntity(client, self, "pd.watchIsConfig", const.BP_ENABLED,
+            #               lambda value: {"moduleType": 1,
+            #                              "operateType": "watthConfig",
+            #                              "params": {"bpPowerSoc": value * 50,
+            #                                         "minChgSoc": 0,
+            #                                         "isConfig": value,
+            #                                         "minDsgSoc": 0}}),
+        ]
 
-    # def selects(self, client: EcoflowApiClient) -> list[BaseSelectEntity]:
-    #     return [
-    #         DictSelectEntity(client, self, "mppt.dcChgCurrent", const.DC_CHARGE_CURRENT, const.DC_CHARGE_CURRENT_OPTIONS,
-    #                          lambda value: {"moduleType": 5, "operateType": "dcChgCfg",
-    #                                         "params": {"dcChgCfg": value}}),
+    def selects(self, client: EcoflowApiClient) -> list[BaseSelectEntity]:
+        return [
+            # DictSelectEntity(client, self, "mppt.dcChgCurrent", const.DC_CHARGE_CURRENT, const.DC_CHARGE_CURRENT_OPTIONS,
+            #                  lambda value: {"moduleType": 5, "operateType": "dcChgCfg",
+            #                                 "params": {"dcChgCfg": value}}),
 
-    #         TimeoutDictSelectEntity(client, self, "pd.lcdOffSec", const.SCREEN_TIMEOUT, const.SCREEN_TIMEOUT_OPTIONS,
-    #                                 lambda value: {"moduleType": 1, "operateType": "lcdCfg",
-    #                                                "params": {"brighLevel": 255, "delayOff": value}}),
+            # TimeoutDictSelectEntity(client, self, "pd.lcdOffSec", const.SCREEN_TIMEOUT, const.SCREEN_TIMEOUT_OPTIONS,
+            #                         lambda value: {"moduleType": 1, "operateType": "lcdCfg",
+            #                                        "params": {"brighLevel": 255, "delayOff": value}}),
 
-    #         TimeoutDictSelectEntity(client, self, "pd.standbyMin", const.UNIT_TIMEOUT, const.UNIT_TIMEOUT_OPTIONS,
-    #                                 lambda value: {"moduleType": 1, "operateType": "standbyTime",
-    #                                                "params": {"standbyMin": value}}),
+            # TimeoutDictSelectEntity(client, self, "pd.standbyMin", const.UNIT_TIMEOUT, const.UNIT_TIMEOUT_OPTIONS,
+            #                         lambda value: {"moduleType": 1, "operateType": "standbyTime",
+            #                                        "params": {"standbyMin": value}}),
 
-    #         TimeoutDictSelectEntity(client, self, "mppt.acStandbyMins", const.AC_TIMEOUT, const.AC_TIMEOUT_OPTIONS,
-    #                                 lambda value: {"moduleType": 5, "operateType": "standbyTime",
-    #                                                "params": {"standbyMins": value}}),
+            # TimeoutDictSelectEntity(client, self, "mppt.acStandbyMins", const.AC_TIMEOUT, const.AC_TIMEOUT_OPTIONS,
+            #                         lambda value: {"moduleType": 5, "operateType": "standbyTime",
+            #                                        "params": {"standbyMins": value}}),
 
-    #         TimeoutDictSelectEntity(client, self, "mppt.carStandbyMin", const.DC_TIMEOUT, const.DC_TIMEOUT_OPTIONS,
-    #                                 lambda value: {"moduleType": 5, "operateType": "carStandby",
-    #                                                "params": {"standbyMins": value}})
+            # TimeoutDictSelectEntity(client, self, "mppt.carStandbyMin", const.DC_TIMEOUT, const.DC_TIMEOUT_OPTIONS,
+            #                         lambda value: {"moduleType": 5, "operateType": "carStandby",
+            #                                        "params": {"standbyMins": value}})
 
-    #     ]
+        ]
 
     def _status_sensor(self, client: EcoflowApiClient) -> StatusSensorEntity:
         return QuotaStatusSensorEntity(client, self)
