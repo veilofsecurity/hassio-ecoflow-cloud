@@ -5,8 +5,8 @@ from ...number import ChargingPowerEntity, MinBatteryLevelEntity, MaxBatteryLeve
     MaxGenStopLevelEntity, MinGenStartLevelEntity, BatteryBackupLevel
 from ...select import DictSelectEntity, TimeoutDictSelectEntity
 from ...sensor import LevelSensorEntity, RemainSensorEntity, TempSensorEntity, CyclesSensorEntity, \
-    InWattsSensorEntity, OutWattsSensorEntity, MilliVoltSensorEntity, InMilliVoltSensorEntity, \
-    OutMilliVoltSensorEntity, CapacitySensorEntity, StatusSensorEntity, QuotaStatusSensorEntity
+    InWattsSensorEntity, OutWattsSensorEntity, MilliVoltSensorEntity, InVoltSensorEntity, \
+    OutVoltSensorEntity, CapacitySensorEntity, StatusSensorEntity, QuotaStatusSensorEntity
 from ...switch import BeeperEntity, EnabledEntity
 
 
@@ -31,23 +31,23 @@ class Delta3(BaseDevice):
             InWattsSensorEntity(client, self, "powGetAcIn", const.AC_IN_POWER),
             OutWattsSensorEntity(client, self, "powGetAcOut", const.AC_OUT_POWER),
 
-            InMilliVoltSensorEntity(client, self, "powGetAcIn", const.AC_IN_VOLT),
-            OutMilliVoltSensorEntity(client, self, "powGetAcOut", const.AC_OUT_VOLT),
+            InVoltSensorEntity(client, self, "plugInInfoAcInVol", const.AC_IN_VOLT),
+            OutVoltSensorEntity(client, self, "plugInInfoAcOutVol", const.AC_OUT_VOLT),
 
-            # InWattsSensorEntity(client, self, "mppt.inWatts", const.SOLAR_IN_POWER),
+            InWattsSensorEntity(client, self, "powGetPv", const.SOLAR_IN_POWER),
 
             # OutWattsSensorEntity(client, self, "pd.carWatts", const.DC_OUT_POWER),
             # the same value as pd.carWatts
-            # OutWattsSensorEntity(client, self, "mppt.outWatts", const.DC_OUT_POWER),
+            OutWattsSensorEntity(client, self, "powGetDc", const.DC_OUT_POWER),
 
-            # OutWattsSensorEntity(client, self, "pd.typec1Watts", const.TYPEC_1_OUT_POWER),
-            # OutWattsSensorEntity(client, self, "pd.typec2Watts", const.TYPEC_2_OUT_POWER),
+            OutWattsSensorEntity(client, self, "powGetTypec1", const.TYPEC_1_OUT_POWER),
+            OutWattsSensorEntity(client, self, "powGetTypec2", const.TYPEC_2_OUT_POWER),
 
             # OutWattsSensorEntity(client, self, "pd.usb1Watts", const.USB_1_OUT_POWER),
             # OutWattsSensorEntity(client, self, "pd.usb2Watts", const.USB_2_OUT_POWER),
 
-            # OutWattsSensorEntity(client, self, "pd.qcUsb1Watts", const.USB_QC_1_OUT_POWER),
-            # OutWattsSensorEntity(client, self, "pd.qcUsb2Watts", const.USB_QC_2_OUT_POWER),
+            OutWattsSensorEntity(client, self, "powGetQcusb1", const.USB_QC_1_OUT_POWER),
+            OutWattsSensorEntity(client, self, "powGetQcusb2", const.USB_QC_2_OUT_POWER),
 
             RemainSensorEntity(client, self, "v1p0.chgRemainTime", const.CHARGE_REMAINING_TIME),
             RemainSensorEntity(client, self, "v1p0.dsgRemainTime", const.DISCHARGE_REMAINING_TIME),
@@ -106,10 +106,10 @@ class Delta3(BaseDevice):
                                   lambda value: {"moduleType": 2, "operateType": "dsgCfg",
                                                  "params": {"minDsgSoc": int(value)}}),
 
-            BatteryBackupLevel(client, self, "pd.bpPowerSoc", const.BACKUP_RESERVE_LEVEL, 5, 100,
+            BatteryBackupLevel(client, self, "backupReverseSoc", const.BACKUP_RESERVE_LEVEL, 5, 100,
                                "v1p0.minDsgSoc", "v1p0.maxChargeSoc",
                                lambda value: {"moduleType": 1, "operateType": "watthConfig",
-                                              "params": {"isConfig": 1, "bpPowerSoc": int(value), "minDsgSoc": 0,
+                                              "params": {"isConfig": 1, "backupReverseSoc": int(value), "minDsgSoc": 0,
                                                          "minChgSoc": 0}}),
 
             MinGenStartLevelEntity(client, self, "v1p0.minOpenOilEbSoc", const.GEN_AUTO_START_LEVEL, 0, 30,
@@ -120,7 +120,7 @@ class Delta3(BaseDevice):
                                   lambda value: {"moduleType": 2, "operateType": "closeOilSoc",
                                                  "params": {"closeOilSoc": value}}),
 
-            ChargingPowerEntity(client, self, "mppt.cfgChgWatts", const.AC_CHARGING_POWER, 200, 1200,
+            ChargingPowerEntity(client, self, "plugInInfoAcInChgPowMax", const.AC_CHARGING_POWER, 200, 1200,
                                 lambda value: {"moduleType": 5, "operateType": "acChgCfg",
                                                "params": {"chgWatts": int(value), "chgPauseFlag": 255}})
 
@@ -128,63 +128,63 @@ class Delta3(BaseDevice):
 
     def switches(self, client: EcoflowApiClient) -> list[BaseSwitchEntity]:
         return [
-            BeeperEntity(client, self, "mppt.beepState", const.BEEPER,
+            BeeperEntity(client, self, "enBeep", const.BEEPER,
                          lambda value: {"moduleType": 5, "operateType": "quietMode", "params": {"enabled": value}}),
 
-            EnabledEntity(client, self, "pd.dcOutState", const.USB_ENABLED,
-                          lambda value: {"moduleType": 1, "operateType": "dcOutCfg", "params": {"enabled": value}}),
+            # EnabledEntity(client, self, "pd.dcOutState", const.USB_ENABLED,
+            #               lambda value: {"moduleType": 1, "operateType": "dcOutCfg", "params": {"enabled": value}}),
 
-            EnabledEntity(client, self, "pd.acAutoOutConfig", const.AC_ALWAYS_ENABLED,
-                          lambda value, params: {"moduleType": 1, "operateType": "acAutoOutConfig",
-                                                 "params": {"acAutoOutConfig": value,
-                                                            "minAcOutSoc": int(
-                                                                params.get("bms_emsStatus.minDsgSoc", 0)) + 5}}),
+            # EnabledEntity(client, self, "pd.acAutoOutConfig", const.AC_ALWAYS_ENABLED,
+            #               lambda value, params: {"moduleType": 1, "operateType": "acAutoOutConfig",
+            #                                      "params": {"acAutoOutConfig": value,
+            #                                                 "minAcOutSoc": int(
+            #                                                     params.get("bms_emsStatus.minDsgSoc", 0)) + 5}}),
 
-            EnabledEntity(client, self, "pd.pvChgPrioSet", const.PV_PRIO,
-                          lambda value: {"moduleType": 1, "operateType": "pvChangePrio",
-                                         "params": {"pvChangeSet": value}}),
+            # EnabledEntity(client, self, "pd.pvChgPrioSet", const.PV_PRIO,
+            #               lambda value: {"moduleType": 1, "operateType": "pvChangePrio",
+            #                              "params": {"pvChangeSet": value}}),
 
-            EnabledEntity(client, self, "mppt.cfgAcEnabled", const.AC_ENABLED,
-                          lambda value: {"moduleType": 5, "operateType": "acOutCfg",
-                                         "params": {"enabled": value, "out_voltage": -1, "out_freq": 255,
-                                                    "xboost": 255}}),
+            # EnabledEntity(client, self, "mppt.cfgAcEnabled", const.AC_ENABLED,
+            #               lambda value: {"moduleType": 5, "operateType": "acOutCfg",
+            #                              "params": {"enabled": value, "out_voltage": -1, "out_freq": 255,
+            #                                         "xboost": 255}}),
 
-            EnabledEntity(client, self, "mppt.cfgAcXboost", const.XBOOST_ENABLED,
+            EnabledEntity(client, self, "xboostEn", const.XBOOST_ENABLED,
                           lambda value: {"moduleType": 5, "operateType": "acOutCfg",
                                          "params": {"enabled": 255, "out_voltage": -1, "out_freq": 255,
                                                     "xboost": value}}),
 
-            EnabledEntity(client, self, "pd.carState", const.DC_ENABLED,
-                          lambda value: {"moduleType": 5, "operateType": "mpptCar", "params": {"enabled": value}}),
+            # EnabledEntity(client, self, "pd.carState", const.DC_ENABLED,
+            #               lambda value: {"moduleType": 5, "operateType": "mpptCar", "params": {"enabled": value}}),
 
-            EnabledEntity(client, self, "pd.watchIsConfig", const.BP_ENABLED,
-                          lambda value: {"moduleType": 1,
-                                         "operateType": "watthConfig",
-                                         "params": {"bpPowerSoc": value * 50,
-                                                    "minChgSoc": 0,
-                                                    "isConfig": value,
-                                                    "minDsgSoc": 0}}),
+            # EnabledEntity(client, self, "pd.watchIsConfig", const.BP_ENABLED,
+            #               lambda value: {"moduleType": 1,
+            #                              "operateType": "watthConfig",
+            #                              "params": {"bpPowerSoc": value * 50,
+            #                                         "minChgSoc": 0,
+            #                                         "isConfig": value,
+            #                                         "minDsgSoc": 0}}),
         ]
 
     def selects(self, client: EcoflowApiClient) -> list[BaseSelectEntity]:
         return [
-            DictSelectEntity(client, self, "mppt.dcChgCurrent", const.DC_CHARGE_CURRENT, const.DC_CHARGE_CURRENT_OPTIONS,
-                             lambda value: {"moduleType": 5, "operateType": "dcChgCfg",
-                                            "params": {"dcChgCfg": value}}),
+            # DictSelectEntity(client, self, "mppt.dcChgCurrent", const.DC_CHARGE_CURRENT, const.DC_CHARGE_CURRENT_OPTIONS,
+            #                  lambda value: {"moduleType": 5, "operateType": "dcChgCfg",
+            #                                 "params": {"dcChgCfg": value}}),
 
-            TimeoutDictSelectEntity(client, self, "pd.lcdOffSec", const.SCREEN_TIMEOUT, const.SCREEN_TIMEOUT_OPTIONS,
+            TimeoutDictSelectEntity(client, self, "screenOffTime", const.SCREEN_TIMEOUT, const.SCREEN_TIMEOUT_OPTIONS,
                                     lambda value: {"moduleType": 1, "operateType": "lcdCfg",
                                                    "params": {"brighLevel": 255, "delayOff": value}}),
 
-            TimeoutDictSelectEntity(client, self, "pd.standbyMin", const.UNIT_TIMEOUT, const.UNIT_TIMEOUT_OPTIONS,
+            TimeoutDictSelectEntity(client, self, "devStandbyTime", const.UNIT_TIMEOUT, const.UNIT_TIMEOUT_OPTIONS,
                                     lambda value: {"moduleType": 1, "operateType": "standbyTime",
                                                    "params": {"standbyMin": value}}),
 
-            TimeoutDictSelectEntity(client, self, "mppt.acStandbyMins", const.AC_TIMEOUT, const.AC_TIMEOUT_OPTIONS,
+            TimeoutDictSelectEntity(client, self, "acStandbyTime", const.AC_TIMEOUT, const.AC_TIMEOUT_OPTIONS,
                                     lambda value: {"moduleType": 5, "operateType": "standbyTime",
                                                    "params": {"standbyMins": value}}),
 
-            TimeoutDictSelectEntity(client, self, "mppt.carStandbyMin", const.DC_TIMEOUT, const.DC_TIMEOUT_OPTIONS,
+            TimeoutDictSelectEntity(client, self, "dcStandbyTime", const.DC_TIMEOUT, const.DC_TIMEOUT_OPTIONS,
                                     lambda value: {"moduleType": 5, "operateType": "carStandby",
                                                    "params": {"standbyMins": value}})
 
