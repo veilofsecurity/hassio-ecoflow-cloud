@@ -24,7 +24,7 @@ class Delta3(BaseDevice):
 
             LevelSensorEntity(client, self, "soh", const.SOH),
 
-            LevelSensorEntity(client, self, "lcdShowSoc", const.COMBINED_BATTERY_LEVEL),
+            LevelSensorEntity(client, self, "v1p0.lcdShowSoc", const.COMBINED_BATTERY_LEVEL),
             InWattsSensorEntity(client, self, "powInSumW", const.TOTAL_IN_POWER),
             OutWattsSensorEntity(client, self, "powOutSumW", const.TOTAL_OUT_POWER),
 
