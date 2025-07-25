@@ -25,34 +25,34 @@ class Delta3(BaseDevice):
             LevelSensorEntity(client, self, "soh", const.SOH),
 
             LevelSensorEntity(client, self, "lcdShowSoc", const.COMBINED_BATTERY_LEVEL),
-            InWattsSensorEntity(client, self, "pd.wattsInSum", const.TOTAL_IN_POWER),
-            OutWattsSensorEntity(client, self, "pd.wattsOutSum", const.TOTAL_OUT_POWER),
+            InWattsSensorEntity(client, self, "powInSumW", const.TOTAL_IN_POWER),
+            OutWattsSensorEntity(client, self, "powOutSumW", const.TOTAL_OUT_POWER),
 
-            InWattsSensorEntity(client, self, "powInSumW", const.AC_IN_POWER),
-            OutWattsSensorEntity(client, self, "powOutSumW", const.AC_OUT_POWER),
+            InWattsSensorEntity(client, self, "powGetAcIn", const.AC_IN_POWER),
+            OutWattsSensorEntity(client, self, "powGetAcOut", const.AC_OUT_POWER),
 
             InMilliVoltSensorEntity(client, self, "powGetAcIn", const.AC_IN_VOLT),
             OutMilliVoltSensorEntity(client, self, "powGetAcOut", const.AC_OUT_VOLT),
 
-            InWattsSensorEntity(client, self, "mppt.inWatts", const.SOLAR_IN_POWER),
+            # InWattsSensorEntity(client, self, "mppt.inWatts", const.SOLAR_IN_POWER),
 
             # OutWattsSensorEntity(client, self, "pd.carWatts", const.DC_OUT_POWER),
             # the same value as pd.carWatts
-            OutWattsSensorEntity(client, self, "mppt.outWatts", const.DC_OUT_POWER),
+            # OutWattsSensorEntity(client, self, "mppt.outWatts", const.DC_OUT_POWER),
 
-            OutWattsSensorEntity(client, self, "pd.typec1Watts", const.TYPEC_1_OUT_POWER),
-            OutWattsSensorEntity(client, self, "pd.typec2Watts", const.TYPEC_2_OUT_POWER),
+            # OutWattsSensorEntity(client, self, "pd.typec1Watts", const.TYPEC_1_OUT_POWER),
+            # OutWattsSensorEntity(client, self, "pd.typec2Watts", const.TYPEC_2_OUT_POWER),
 
-            OutWattsSensorEntity(client, self, "pd.usb1Watts", const.USB_1_OUT_POWER),
-            OutWattsSensorEntity(client, self, "pd.usb2Watts", const.USB_2_OUT_POWER),
+            # OutWattsSensorEntity(client, self, "pd.usb1Watts", const.USB_1_OUT_POWER),
+            # OutWattsSensorEntity(client, self, "pd.usb2Watts", const.USB_2_OUT_POWER),
 
-            OutWattsSensorEntity(client, self, "pd.qcUsb1Watts", const.USB_QC_1_OUT_POWER),
-            OutWattsSensorEntity(client, self, "pd.qcUsb2Watts", const.USB_QC_2_OUT_POWER),
+            # OutWattsSensorEntity(client, self, "pd.qcUsb1Watts", const.USB_QC_1_OUT_POWER),
+            # OutWattsSensorEntity(client, self, "pd.qcUsb2Watts", const.USB_QC_2_OUT_POWER),
 
             RemainSensorEntity(client, self, "v1p0.chgRemainTime", const.CHARGE_REMAINING_TIME),
             RemainSensorEntity(client, self, "v1p0.dsgRemainTime", const.DISCHARGE_REMAINING_TIME),
 
-            TempSensorEntity(client, self, "inv.outTemp", "Inv Out Temperature"),
+            # TempSensorEntity(client, self, "inv.outTemp", "Inv Out Temperature"),
             CyclesSensorEntity(client, self, "cycles", const.CYCLES),
 
             TempSensorEntity(client, self, "temp", const.BATTERY_TEMP)
@@ -68,30 +68,30 @@ class Delta3(BaseDevice):
             MilliVoltSensorEntity(client, self, "maxCellVol", const.MAX_CELL_VOLT, False),
 
             # Optional Slave Battery
-            LevelSensorEntity(client, self, "bms_slave.soc", const.SLAVE_BATTERY_LEVEL, False, True)
-            .attr("bms_slave.designCap", const.ATTR_DESIGN_CAPACITY, 0)
-            .attr("bms_slave.fullCap", const.ATTR_FULL_CAPACITY, 0)
-            .attr("bms_slave.remainCap", const.ATTR_REMAIN_CAPACITY, 0),
-            CapacitySensorEntity(client, self, "bms_slave.designCap", const.SLAVE_DESIGN_CAPACITY, False),
-            CapacitySensorEntity(client, self, "bms_slave.fullCap", const.SLAVE_FULL_CAPACITY, False),
-            CapacitySensorEntity(client, self, "bms_slave.remainCap", const.SLAVE_REMAIN_CAPACITY, False),
+            # LevelSensorEntity(client, self, "bms_slave.soc", const.SLAVE_BATTERY_LEVEL, False, True)
+            # .attr("bms_slave.designCap", const.ATTR_DESIGN_CAPACITY, 0)
+            # .attr("bms_slave.fullCap", const.ATTR_FULL_CAPACITY, 0)
+            # .attr("bms_slave.remainCap", const.ATTR_REMAIN_CAPACITY, 0),
+            # CapacitySensorEntity(client, self, "bms_slave.designCap", const.SLAVE_DESIGN_CAPACITY, False),
+            # CapacitySensorEntity(client, self, "bms_slave.fullCap", const.SLAVE_FULL_CAPACITY, False),
+            # CapacitySensorEntity(client, self, "bms_slave.remainCap", const.SLAVE_REMAIN_CAPACITY, False),
 
-            LevelSensorEntity(client, self, "bms_slave.soh", const.SLAVE_SOH),
-            TempSensorEntity(client, self, "bms_slave.temp", const.SLAVE_BATTERY_TEMP, False, True)
-            .attr("bms_slave.minCellTemp", const.ATTR_MIN_CELL_TEMP, 0)
-            .attr("bms_slave.maxCellTemp", const.ATTR_MAX_CELL_TEMP, 0),
-            TempSensorEntity(client, self, "bms_slave.minCellTemp", const.SLAVE_MIN_CELL_TEMP, False),
-            TempSensorEntity(client, self, "bms_slave.maxCellTemp", const.SLAVE_MAX_CELL_TEMP, False),
+            # LevelSensorEntity(client, self, "bms_slave.soh", const.SLAVE_SOH),
+            # TempSensorEntity(client, self, "bms_slave.temp", const.SLAVE_BATTERY_TEMP, False, True)
+            # .attr("bms_slave.minCellTemp", const.ATTR_MIN_CELL_TEMP, 0)
+            # .attr("bms_slave.maxCellTemp", const.ATTR_MAX_CELL_TEMP, 0),
+            # TempSensorEntity(client, self, "bms_slave.minCellTemp", const.SLAVE_MIN_CELL_TEMP, False),
+            # TempSensorEntity(client, self, "bms_slave.maxCellTemp", const.SLAVE_MAX_CELL_TEMP, False),
 
-            MilliVoltSensorEntity(client, self, "bms_slave.vol", const.SLAVE_BATTERY_VOLT, False)
-            .attr("bms_slave.minCellVol", const.ATTR_MIN_CELL_VOLT, 0)
-            .attr("bms_slave.maxCellVol", const.ATTR_MAX_CELL_VOLT, 0),
-            MilliVoltSensorEntity(client, self, "bms_slave.minCellVol", const.SLAVE_MIN_CELL_VOLT, False),
-            MilliVoltSensorEntity(client, self, "bms_slave.maxCellVol", const.SLAVE_MAX_CELL_VOLT, False),
+            # MilliVoltSensorEntity(client, self, "bms_slave.vol", const.SLAVE_BATTERY_VOLT, False)
+            # .attr("bms_slave.minCellVol", const.ATTR_MIN_CELL_VOLT, 0)
+            # .attr("bms_slave.maxCellVol", const.ATTR_MAX_CELL_VOLT, 0),
+            # MilliVoltSensorEntity(client, self, "bms_slave.minCellVol", const.SLAVE_MIN_CELL_VOLT, False),
+            # MilliVoltSensorEntity(client, self, "bms_slave.maxCellVol", const.SLAVE_MAX_CELL_VOLT, False),
 
-            CyclesSensorEntity(client, self, "bms_slave.cycles", const.SLAVE_CYCLES, False, True),
-            InWattsSensorEntity(client, self, "bms_slave.inputWatts", const.SLAVE_IN_POWER, False, True),
-            OutWattsSensorEntity(client, self, "bms_slave.outputWatts", const.SLAVE_OUT_POWER, False, True),
+            # CyclesSensorEntity(client, self, "bms_slave.cycles", const.SLAVE_CYCLES, False, True),
+            # InWattsSensorEntity(client, self, "bms_slave.inputWatts", const.SLAVE_IN_POWER, False, True),
+            # OutWattsSensorEntity(client, self, "bms_slave.outputWatts", const.SLAVE_OUT_POWER, False, True),
             self._status_sensor(client),
 
         ]
